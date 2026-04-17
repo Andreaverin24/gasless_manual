@@ -5,6 +5,8 @@ import {
   aaDiagram,
   architectureOptions,
   codeExamples,
+  contractImpactCards,
+  contractImpactNotes,
   contractDiagram,
   decisionRows,
   depositDeepDive,
@@ -620,6 +622,46 @@ function App() {
                 </Card>
               ))}
             </div>
+          </div>
+        </Section>
+
+        <Section
+          id="contract-impact"
+          kicker="Связь с текущим DSF.sol"
+          title="Какие варианты требуют или не требуют изменения контракта"
+          subtitle="Этот блок привязан к текущей архитектуре DSF.sol. Он отвечает на практический вопрос: можно ли внедрить удобный путь поверх текущего контракта или потребуется его менять и разворачивать заново."
+        >
+          <div className="grid gap-4 xl:grid-cols-3">
+            {contractImpactCards.map((card) => (
+              <Card key={card.title} className="h-full">
+                <h3 className="text-xl font-semibold text-white">{card.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-slate-300">{card.subtitle}</p>
+                <div className="mt-5">
+                  <StepList steps={card.items} accent="cyan" />
+                </div>
+                <div className="mt-5 rounded-2xl border border-amber-400/10 bg-amber-400/5 p-4 text-sm leading-7 text-slate-200">
+                  {card.conclusion}
+                </div>
+              </Card>
+            ))}
+          </div>
+
+          <Card className="mt-4">
+            <h3 className="text-2xl font-semibold text-white">Вывод по текущему DSF.sol</h3>
+            <div className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
+              <p><strong>Без редеплоя DSF</strong> можно улучшить только часть пути: батчи, операторское завершение, внешний сервис-отправитель и отдельные обвязочные контракты.</p>
+              <p><strong>Без изменения DSF нельзя</strong> сделать нативный вывод по подписи внутри самого протокола, потому что сейчас логика завязана на вызывающий адрес и не умеет проверять подпись пользователя.</p>
+              <p><strong>ERC-4337 — важное исключение:</strong> если проект строит собственное кошелек-приложение, то можно оставить DSF почти без изменений и вынести удобство в слой умного кошелька и спонсирования комиссий.</p>
+            </div>
+          </Card>
+
+          <div className="mt-4 grid gap-4 md:grid-cols-3">
+            {contractImpactNotes.map((note) => (
+              <Card key={note.title}>
+                <h3 className="text-lg font-semibold text-white">{note.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-slate-300">{note.text}</p>
+              </Card>
+            ))}
           </div>
         </Section>
 
