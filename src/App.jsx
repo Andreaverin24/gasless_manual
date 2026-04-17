@@ -57,13 +57,13 @@ function App() {
       signs:
         sim.architecture === "standard"
           ? sim.action === "deposit"
-            ? "Approve + deposit transaction"
-            : "Withdrawal transaction"
+            ? "Подтверждение списания и затем транзакция депозита"
+            : "Обычная транзакция вывода"
           : sim.architecture === "ERC-4337"
-            ? "UserOperation из smart account"
+            ? "Пакет команды из умного кошелька"
             : sim.action === "deposit"
-              ? "Deposit intent с amount, receiver, minLpOut, nonce, deadline"
-              : "Withdraw intent с shares, tokenOut, minAmountOut, nonce, deadline",
+              ? "Подписанное разрешение на депозит с суммой, получателем, минимальным результатом, одноразовым номером и сроком действия"
+              : "Подписанное разрешение на вывод с числом долей, активом на выходе, минимальной суммой, одноразовым номером и сроком действия",
       payer:
         sim.sponsor === "first tx only"
           ? "Спонсирование только для онбординга"
@@ -78,16 +78,16 @@ function App() {
         sim.architecture === "standard"
           ? "Без изменений"
           : sim.architecture === "ERC-2771"
-            ? "Поддержка trusted forwarder recipient"
+            ? "Поддержка доверенного посредника в контракте-получателе"
             : sim.architecture === "ERC-4337"
-              ? "Маршрутизация, совместимая со smart account"
-              : "Executor / router с валидацией signature",
+              ? "Маршрутизация, совместимая с умным кошельком"
+              : "Исполняющий контракт с проверкой подписи",
       backend:
         sim.architecture === "standard"
           ? "Не требуется"
           : sim.architecture === "ERC-4337"
-            ? "Bundler + paymaster policy"
-            : "Relayer + sponsor policy service",
+            ? "Сервис упаковки операций и правила спонсирования"
+            : "Сервис-отправитель и правила спонсирования",
       recommendation:
         sim.architecture === "standard"
           ? "Слабый вариант для DSF UX"
@@ -100,8 +100,8 @@ function App() {
         sim.architecture === "standard"
           ? "Зависимость от ETH, лишний friction"
           : sim.architecture === "ERC-4337"
-            ? "Сложная инфраструктура, paymaster abuse"
-            : "Replay, устаревшие параметры, sponsor abuse",
+            ? "Сложная инфраструктура и риск злоупотребления спонсированием"
+            : "Повторное использование подписи, устаревшие параметры, злоупотребление бюджетом",
       difficulty:
         sim.architecture === "standard"
           ? "Низкая"
@@ -139,7 +139,7 @@ function App() {
           <a href="#top" className="flex items-center gap-3">
             <div className="rounded-2xl border border-cyan-400/20 bg-cyan-400/10 px-3 py-2 font-display text-lg font-semibold text-cyan-200">DSF</div>
             <div>
-              <div className="font-display text-sm font-semibold text-white">Gasless LP Demo</div>
+              <div className="font-display text-sm font-semibold text-white">Демо по LP без комиссии со стороны пользователя</div>
               <div className="text-xs text-slate-400">DeFi-онбординг, депозиты и выводы</div>
             </div>
           </a>
@@ -158,19 +158,19 @@ function App() {
           <div className="absolute inset-y-0 right-0 hidden w-[46%] bg-[radial-gradient(circle_at_30%_40%,rgba(34,211,238,0.24),transparent_30%),radial-gradient(circle_at_60%_55%,rgba(59,130,246,0.26),transparent_34%),radial-gradient(circle_at_50%_50%,rgba(10,20,40,0.2),transparent_70%)] lg:block" />
           <div className="grid gap-8 lg:grid-cols-[1.25fr_0.75fr]">
             <div className="relative z-10">
-              <Badge>Интерактивный архитектурный explainer для DSF-style LP vaults</Badge>
+              <Badge>Интерактивное объяснение архитектуры LP-протокола DSF</Badge>
               <h1 className="mt-5 max-w-4xl font-display text-4xl font-semibold tracking-tight text-white md:text-7xl">
-                Gasless-депозиты и выводы для DeFi LP-токенов
+                Депозиты и выводы без комиссии со стороны пользователя для LP-токенов
               </h1>
               <p className="mt-5 max-w-3xl text-base leading-8 text-slate-300 md:text-lg">
-                Интерактивное объяснение того, как для DSF-подобного протокола можно реализовать gasless UX для депозита
-                стейблкоинов, mint LP, withdraw, redeem и approve-less flow без backend-зависимости на реальный блокчейн.
+                Эта страница показывает, как упростить депозит и вывод в DSF-подобном протоколе: убрать лишние подтверждения,
+                дать человеку возможность действовать без ETH на комиссию и при этом сохранить контроль и безопасность на уровне контрактов.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
-                <HeroButton href="#ux-flow">Посмотреть UX flow</HeroButton>
+                <HeroButton href="#ux-flow">Посмотреть путь пользователя</HeroButton>
                 <HeroButton href="#architectures">Разобрать архитектуру</HeroButton>
                 <HeroButton href="#matrix">Сравнить варианты реализации</HeroButton>
-                <HeroButton href="#simulator">Симулятор DSF gasless flow</HeroButton>
+                <HeroButton href="#simulator">Симулятор сценариев DSF</HeroButton>
               </div>
               <div className="mt-8 grid gap-4 md:grid-cols-3">
                 {heroStats.map((stat, index) => (
@@ -187,22 +187,22 @@ function App() {
               transition={{ duration: 0.6 }}
               className="relative z-10 rounded-[28px] border border-cyan-400/20 bg-slate-950/70 p-5"
             >
-              <p className="text-xs uppercase tracking-[0.22em] text-cyan-300/80">Карта протокола</p>
+              <p className="text-xs uppercase tracking-[0.22em] text-cyan-300/80">Карта системы</p>
               <div className="mt-5 space-y-3">
-                <ProtocolBlock title="Кошелек пользователя" icon={<WalletCards className="h-5 w-5 text-cyan-300" />} subtitle="подписывает permit, deposit intent или withdraw intent" />
-                <ProtocolBlock title="Frontend demo-app" icon={<Sparkles className="h-5 w-5 text-cyan-300" />} subtitle="собирает typed data и UX-слой объяснения" />
-                <ProtocolBlock title="Relayer / paymaster policy" icon={<Cpu className="h-5 w-5 text-cyan-300" />} subtitle="решает, кого и когда спонсировать" />
-                <ProtocolBlock title="DSF executor / forwarder" icon={<GitBranch className="h-5 w-5 text-cyan-300" />} subtitle="проверяет подписи и маршрутизирует deposit / withdraw" />
-                <ProtocolBlock title="Vault + LP token core" icon={<Check className="h-5 w-5 text-cyan-300" />} subtitle="минтит LP при депозите и сжигает LP при выводе" />
+                <ProtocolBlock title="Кошелек пользователя" icon={<WalletCards className="h-5 w-5 text-cyan-300" />} subtitle="подтверждает действие подписью" />
+                <ProtocolBlock title="Интерфейс приложения" icon={<Sparkles className="h-5 w-5 text-cyan-300" />} subtitle="объясняет шаги и подготавливает данные для подписи" />
+                <ProtocolBlock title="Правила оплаты комиссии" icon={<Cpu className="h-5 w-5 text-cyan-300" />} subtitle="решают, кому и когда протокол оплатит комиссию" />
+                <ProtocolBlock title="Исполняющий слой DSF" icon={<GitBranch className="h-5 w-5 text-cyan-300" />} subtitle="проверяет подпись и запускает депозит или вывод" />
+                <ProtocolBlock title="Хранилище и LP-токены" icon={<Check className="h-5 w-5 text-cyan-300" />} subtitle="выпускают LP-токены при депозите и сжигают их при выводе" />
               </div>
               <div className="mt-6 rounded-3xl border border-white/10 bg-white/[0.03] p-4">
                 <div className="flex items-center justify-between text-sm text-slate-300">
-                  <span>Самый реалистичный MVP</span>
-                  <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-emerald-200">Permit2 + relayer + executor</span>
+                  <span>Самый реалистичный первый шаг</span>
+                  <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-emerald-200">Permit2 + сервис-отправитель + исполнитель</span>
                 </div>
                 <p className="mt-3 text-sm leading-7 text-slate-400">
-                  Самый сильный быстрый выигрыш для DSF: убрать отдельный approve для депозитов стейблкоинов, спонсировать
-                  первый депозит и добавить signature-based withdraw path для пользователей без ETH.
+                  Самый сильный быстрый выигрыш для DSF: убрать отдельный шаг разрешения для депозитов стейблкоинов, спонсировать
+                  первый депозит и добавить путь вывода по подписи для пользователей без ETH.
                 </p>
               </div>
             </motion.div>
@@ -210,10 +210,44 @@ function App() {
         </section>
 
         <Section
+          id="simple"
+          kicker="Простыми словами"
+          title="Как это понять без технического образования"
+          subtitle="Смысл gasless-подхода не в том, что комиссия исчезает. Смысл в том, что пользователю не нужно разбираться в ней на каждом шаге."
+        >
+          <div className="grid gap-4 lg:grid-cols-3">
+            <Card>
+              <h3 className="text-xl font-semibold text-white">Что раздражает сейчас</h3>
+              <p className="mt-3 text-sm leading-7 text-slate-300">
+                Человек хочет просто вложить деньги или вывести их обратно, но вместо этого сталкивается с комиссией, лишними подтверждениями и непонятными словами.
+              </p>
+            </Card>
+            <Card>
+              <h3 className="text-xl font-semibold text-white">Что меняется здесь</h3>
+              <p className="mt-3 text-sm leading-7 text-slate-300">
+                Пользователь не занимается сложной отправкой транзакции. Он только подтверждает свое намерение, а остальное делает инфраструктура протокола.
+              </p>
+            </Card>
+            <Card>
+              <h3 className="text-xl font-semibold text-white">Почему это безопасно</h3>
+              <p className="mt-3 text-sm leading-7 text-slate-300">
+                Контракт не верит сервису на слово. Он сам проверяет, что подпись настоящая, что действие не устарело и что эту подпись нельзя использовать повторно.
+              </p>
+            </Card>
+          </div>
+          <Card className="mt-4">
+            <h3 className="text-xl font-semibold text-white">Если совсем коротко</h3>
+            <p className="mt-3 text-sm leading-7 text-slate-300">
+              Вместо схемы «сам заплати комиссию и сам отправь транзакцию» появляется схема «подтверди действие подписью, а протокол или партнер оплатит доставку этого действия в сеть».
+            </p>
+          </Card>
+        </Section>
+
+        <Section
           id="problem"
           kicker="Почему это важно"
-          title="Почему обычный DeFi UX плохой для LP deposit / withdraw"
-          subtitle="Этот блок приземлен на DSF-модель: депозит стейблкоинов -> mint LP и burn LP -> вывод стейблкоинов."
+          title="Почему обычный путь в DeFi неудобен для депозита и вывода"
+          subtitle="Здесь все привязано к модели DSF: человек вносит стейблкоины и получает LP-токены, а потом сжигает их, чтобы вернуть деньги."
         >
           <div className="grid gap-4 lg:grid-cols-2">
             {["deposit", "withdraw"].map((kind) => (
@@ -225,7 +259,7 @@ function App() {
                       {kind === "deposit" ? "стейблкоин -> DSF LP" : "DSF LP -> стейблкоин"}
                     </p>
                   </div>
-                  <Badge>{kind === "deposit" ? "Путь mint" : "Путь burn"}</Badge>
+                  <Badge>{kind === "deposit" ? "Выпуск LP-токенов" : "Сжигание LP-токенов"}</Badge>
                 </div>
                 <div className="grid gap-4 md:grid-cols-2">
                   <div>
@@ -233,16 +267,16 @@ function App() {
                     <StepList steps={problemComparison[kind].standard} accent="pink" />
                   </div>
                   <div>
-                    <p className="mb-3 text-sm font-medium text-cyan-200">Gasless UX для DSF</p>
+                    <p className="mb-3 text-sm font-medium text-cyan-200">Упрощенный путь для DSF</p>
                     <StepList steps={problemComparison[kind].gasless} accent="cyan" />
                   </div>
                 </div>
                 <div className="mt-5 grid gap-3 md:grid-cols-4">
                   {[
-                    "нужен ETH для gas",
-                    "approve friction",
+                    "нужен ETH для комиссии",
+                    "лишний шаг подтверждения списания",
                     "лишние окна кошелька",
-                    "высокий onboarding drop-off"
+                    "высокая вероятность, что пользователь уйдет"
                   ].map((item) => (
                     <div key={item} className="rounded-2xl border border-white/8 bg-black/20 p-3 text-sm text-slate-300">
                       {item}
@@ -256,9 +290,9 @@ function App() {
 
         <Section
           id="meaning"
-          kicker="Что значит gasless"
-          title="Что значит gasless именно для DSF LP tokens"
-          subtitle="Здесь важно разделить gasless, approve-less и sponsored execution. Это не магия и не одно и то же."
+          kicker="Что это значит"
+          title="Что означает упрощенный режим именно для DSF и LP-токенов"
+          subtitle="Важно разделять три вещи: кто платит комиссию, нужен ли отдельный шаг разрешения на списание и кто именно отправляет транзакцию в сеть."
         >
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             {meaningCards.map((item, index) => (
@@ -274,7 +308,7 @@ function App() {
         <Section
           id="scenarios"
           kicker="Сценарии DSF"
-          title="DSF-специфичные сценарии для LP vault протокола"
+          title="Сценарии для DSF-подобного протокола с LP-токенами"
           subtitle="Каждый сценарий показывает, что именно подписывает пользователь, что делает контракт и кто берет gas на себя."
         >
           <div className="mb-5 flex flex-wrap gap-2">
@@ -306,13 +340,13 @@ function App() {
                 </Card>
                 <Card>
                   <div className="space-y-4">
-                    <StatBar label="UX эффект" value={scoreForLabel(item.ux)} />
-                    <StatBar label="Сложность backend" value={scoreForLabel(item.backend, true)} />
+                    <StatBar label="Пользовательская выгода" value={scoreForLabel(item.ux)} />
+                    <StatBar label="Сложность серверной части" value={scoreForLabel(item.backend, true)} />
                     <StatBar label="Сложность смарт-контрактов" value={scoreForLabel(item.contracts, true)} />
                   </div>
                   <div className="mt-6 rounded-3xl border border-cyan-400/15 bg-cyan-400/10 p-4 text-sm leading-7 text-slate-200">
-                    Для DSF наибольшая продуктовая ценность обычно в двух местах: <strong>first deposit</strong> и <strong>withdraw without ETH</strong>.
-                    Именно там gasless меняет реальный drop-off и удержание.
+                    Для DSF наибольшая продуктовая ценность обычно возникает в двух местах: <strong>первый депозит</strong> и <strong>вывод без ETH</strong>.
+                    Именно там упрощение пути сильнее всего снижает отток пользователей и делает продукт понятнее.
                   </div>
                 </Card>
               </div>
@@ -322,8 +356,8 @@ function App() {
         <Section
           id="architectures"
           kicker="Архитектурные варианты"
-          title="Сравнение архитектур для DSF gasless deposit / withdraw"
-          subtitle="Не все подходы одинаково хороши для LP mint / burn. Ниже можно переключать варианты и видеть их реальные компромиссы."
+          title="Сравнение архитектур для депозита и вывода без комиссии со стороны пользователя"
+          subtitle="Не все подходы одинаково хорошо подходят для выпуска и сжигания LP-токенов. Ниже можно переключать варианты и видеть их реальные плюсы и ограничения."
         >
           <div className="grid gap-4 xl:grid-cols-[0.48fr_0.52fr]">
             <div className="grid gap-3">
@@ -384,9 +418,9 @@ function App() {
 
         <Section
           id="ux-flow"
-          kicker="Интерактивный UX flow"
-          title="Ключевой демонстрационный блок: Standard DeFi UX vs Gasless DSF UX"
-          subtitle="Переключайте scenario и mode, чтобы увидеть, сколько действий остается на стороне пользователя."
+          kicker="Интерактивный путь пользователя"
+          title="Главная демонстрация: обычный путь против упрощенного пути DSF"
+          subtitle="Переключайте сценарий и режим, чтобы увидеть, сколько действий действительно остается на стороне пользователя."
         >
           <div className="mb-5 flex flex-wrap gap-2">
             {["deposit", "withdraw"].map((kind) => (
@@ -404,14 +438,14 @@ function App() {
                 onClick={() => setFlowMode(mode)}
                 className={`rounded-full border px-4 py-2 text-sm ${flowMode === mode ? "border-fuchsia-300/30 bg-fuchsia-400/12 text-white" : "border-white/10 bg-white/[0.03] text-slate-400"}`}
               >
-                {mode === "standard" ? "Обычный DeFi UX" : "Gasless DSF UX"}
+                {mode === "standard" ? "Обычный путь" : "Упрощенный путь"}
               </button>
             ))}
           </div>
           <div className="grid gap-4 lg:grid-cols-[0.55fr_0.45fr]">
             <Card>
               <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
-                {flowKind === "deposit" ? "Сценарий депозита" : "Сценарий вывода"} / {flowMode === "standard" ? "standard" : "gasless"}
+                {flowKind === "deposit" ? "Сценарий депозита" : "Сценарий вывода"} / {flowMode === "standard" ? "обычный режим" : "упрощенный режим"}
               </p>
               <div className="mt-4">
                 <StepList steps={flowModes[flowKind][flowMode].steps} accent={flowMode === "standard" ? "pink" : "cyan"} />
@@ -423,10 +457,10 @@ function App() {
                 <MetricRow label="Окна кошелька" value={flowModes[flowKind][flowMode].popups} />
                 <MetricRow label="Что подписывается" value={flowModes[flowKind][flowMode].signed} />
                 <MetricRow label="Кто платит gas" value={flowModes[flowKind][flowMode].gas} />
-                <MetricRow label="Вероятность drop-off" value={flowModes[flowKind][flowMode].dropoff} />
+                <MetricRow label="Вероятность, что пользователь уйдет" value={flowModes[flowKind][flowMode].dropoff} />
               </div>
               <div className="mt-6">
-                <StatBar label="UX score" value={flowModes[flowKind][flowMode].score} />
+                <StatBar label="Оценка удобства" value={flowModes[flowKind][flowMode].score} />
               </div>
             </Card>
           </div>
@@ -435,15 +469,15 @@ function App() {
         <Section
           id="deposit-tech"
           kicker="Технический разбор"
-          title="Технический разбор: gasless deposit для DSF LP"
-          subtitle="Deposit в LP vault почти всегда упирается в approve friction и в требования держать ETH. Здесь показаны два наиболее практичных варианта."
+          title="Технический разбор: депозит без комиссии со стороны пользователя"
+          subtitle="Депозит в протокол с LP-токенами почти всегда упирается в лишний шаг разрешения на списание и в необходимость держать ETH. Здесь показаны два наиболее практичных пути."
         >
           <div className="grid gap-4 xl:grid-cols-[0.58fr_0.42fr]">
             <div className="grid gap-4">
               {depositDeepDive.map((variant, index) => (
                 <AnimatedReveal key={variant.title} delay={index * 0.07}>
                   <Card>
-                    <ActionHeader icon={index === 0 ? "wallet" : "arch"} title={variant.title} description="Концептуальный путь исполнения DSF deposit" />
+                    <ActionHeader icon={index === 0 ? "wallet" : "arch"} title={variant.title} description="Условный путь исполнения депозита в DSF" />
                     <div className="mt-5">
                       <StepList steps={variant.bullets} accent="amber" />
                     </div>
@@ -461,10 +495,10 @@ function App() {
                 ))}
               </div>
               <div className="mt-6 space-y-3 text-sm leading-7 text-slate-300">
-                <p><strong>nonce</strong> нужен, чтобы одну и ту же подпись нельзя было исполнить второй раз.</p>
-                <p><strong>deadline</strong> нужен, чтобы старая подпись не жила бесконечно.</p>
-                <p><strong>minLpOut</strong> нужен как slippage protection, иначе relayer или сеть могут провести deposit по уже невыгодным условиям.</p>
-                <p><strong>chainId + domain</strong> нужны против cross-domain replay.</p>
+                <p><strong>Одноразовый номер</strong> нужен, чтобы одну и ту же подпись нельзя было использовать повторно.</p>
+                <p><strong>Срок действия</strong> нужен, чтобы старая подпись не жила бесконечно.</p>
+                <p><strong>Минимально допустимое число LP-токенов</strong> защищает пользователя от сильно ухудшившихся условий.</p>
+                <p><strong>Сеть и адрес контракта</strong> нужны, чтобы подпись нельзя было перенести в другой контекст.</p>
               </div>
             </Card>
           </div>
@@ -473,14 +507,14 @@ function App() {
         <Section
           id="withdraw-tech"
           kicker="Механика вывода"
-          title="Технический разбор: gasless withdraw для DSF LP"
-          subtitle="Для LP-протокола gasless withdraw часто даже важнее депозита, потому что пользователь хочет выйти из позиции даже с нулевым ETH."
+          title="Технический разбор: вывод без комиссии со стороны пользователя"
+          subtitle="Для LP-протокола такой вывод часто даже важнее депозита, потому что человек может захотеть срочно выйти из позиции, уже не имея ETH."
         >
           <div className="grid gap-4 xl:grid-cols-[0.55fr_0.45fr]">
             <div className="grid gap-4">
               {withdrawDeepDive.map((variant, index) => (
                 <Card key={variant.title}>
-                    <ActionHeader icon={index === 0 ? "burn" : "secure"} title={variant.title} description="Путь DSF withdraw и поверхность риска" />
+                    <ActionHeader icon={index === 0 ? "burn" : "secure"} title={variant.title} description="Как устроен вывод в DSF и где возникают риски" />
                   <div className="mt-5">
                     <StepList steps={variant.bullets} accent="cyan" />
                   </div>
@@ -511,11 +545,11 @@ function App() {
           id="contracts"
           kicker="Контрактная архитектура"
           title="Контрактная архитектура для DSF"
-          subtitle="Две ключевые схемы: DSF executor layer и ERC-4337 smart account path."
+          subtitle="Ниже две ключевые схемы: отдельный исполняющий слой DSF и более сложный путь через умные кошельки."
         >
           <div className="grid gap-4">
             <Card>
-              <h3 className="mb-4 text-xl font-semibold text-white">Путь Executor / Router для DSF LP</h3>
+              <h3 className="mb-4 text-xl font-semibold text-white">Путь через отдельный исполняющий контракт</h3>
               <DiagramRow items={contractDiagram} />
             </Card>
             <Card>
@@ -529,7 +563,7 @@ function App() {
           id="code"
           kicker="Мини-примеры кода"
           title="Короткие демонстрационные примеры кода"
-          subtitle="Это не production-ready implementation, а обучающие сниппеты, которые показывают реалистичную форму DSF gasless logic."
+          subtitle="Это не готовый код для продакшена, а учебные примеры, которые показывают реалистичную форму логики DSF."
         >
           <div className="grid gap-4 xl:grid-cols-2">
             {codeExamples.map((example) => (
@@ -537,7 +571,7 @@ function App() {
                 <div className="mb-4 flex items-start justify-between gap-3">
                   <div>
                     <h3 className="text-lg font-semibold text-white">{example.title}</h3>
-                    <p className="mt-1 text-sm text-slate-400">Учебный сниппет</p>
+                    <p className="mt-1 text-sm text-slate-400">Учебный пример</p>
                   </div>
                   <Badge>Solidity / EIP-712</Badge>
                 </div>
@@ -553,20 +587,20 @@ function App() {
           id="recommended"
           kicker="Рекомендуемый путь для DSF"
           title="Короткий и ясный вывод: какой путь для DSF наиболее реалистичен первым"
-          subtitle="Этот блок отвечает на главный практический вопрос проекта: как именно начать внедрение gasless deposit / withdraw для LP architecture."
+          subtitle="Этот блок отвечает на главный практический вопрос: с какого шага реально начинать внедрение депозита и вывода без комиссии со стороны пользователя."
         >
           <div className="grid gap-4 xl:grid-cols-[0.45fr_0.55fr]">
             <Card className="h-fit">
-              <h3 className="text-2xl font-semibold text-white">Рекомендация для MVP</h3>
+              <h3 className="text-2xl font-semibold text-white">Рекомендация для первого запуска</h3>
               <div className="mt-5 space-y-3 text-sm leading-7 text-slate-300">
-                <p><strong>Проще всего внедрить первым:</strong> permit or Permit2 + relayer + отдельный DSF executor для deposit.</p>
-                <p><strong>Максимальный UX-эффект быстрее всего:</strong> убрать отдельный approve при депозите и спонсировать first deposit.</p>
-                <p><strong>Что требует изменения core contracts:</strong> ERC-2771 recipient support, smart account-aware flows, или более чистые vault hooks для executor-based withdraw.</p>
-                <p><strong>Что можно вынести в отдельный слой:</strong> relayer policy, sponsor budget control, typed data signing, signature verification executor.</p>
-                <p><strong>Наиболее реалистичный MVP для DSF LP:</strong> approve-less stablecoin deposit + sponsored first deposit + signed withdraw executor for users without ETH.</p>
+                <p><strong>Проще всего внедрить первым:</strong> убрать отдельный шаг разрешения на списание при депозите и добавить отдельный сервис-отправитель.</p>
+                <p><strong>Максимальный пользовательский эффект быстрее всего:</strong> спонсировать первый депозит и сделать вывод возможным даже без ETH.</p>
+                <p><strong>Что требует изменения основных контрактов:</strong> поддержка доверенного посредника, более чистые точки входа в хранилище или отдельная логика безопасного вывода по подписи.</p>
+                <p><strong>Что можно вынести в отдельный слой:</strong> правила спонсирования, контроль бюджета, сбор данных для подписи и отправку транзакций от имени инфраструктуры.</p>
+                <p><strong>Наиболее реалистичный первый вариант для DSF LP:</strong> депозит стейблкоинов без отдельного шага разрешения, спонсируемый первый вход и вывод по подписи для пользователей без ETH.</p>
               </div>
               <div className="mt-6">
-                <SectionLink href="#simulator">Перейти к симулятору DSF flow</SectionLink>
+                <SectionLink href="#simulator">Перейти к симулятору сценариев DSF</SectionLink>
               </div>
             </Card>
             <div className="grid gap-4">
@@ -591,8 +625,8 @@ function App() {
         <Section
           id="risks"
           kicker="Безопасность и компромиссы"
-          title="Security / risks / trade-offs"
-          subtitle="В gasless DSF flow главная сложность не только в UX, но и в точном контроле того, что именно пользователь разрешил сделать."
+          title="Риски и ограничения"
+          subtitle="Главная сложность здесь не только в удобстве, но и в точном контроле того, что именно пользователь разрешил сделать."
         >
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
             {riskCards.map((risk) => (
@@ -602,7 +636,7 @@ function App() {
                   <div>
                     <h3 className="text-base font-semibold text-white">{risk}</h3>
                     <p className="mt-2 text-sm leading-6 text-slate-400">
-                      In DSF LP flows this risk becomes material whenever deposit / withdraw messages are too broad or replayable.
+                      В DSF-подходе этот риск становится реальным, если подписанные разрешения слишком широкие, плохо ограничены по времени или могут использоваться повторно.
                     </p>
                   </div>
                 </div>
@@ -610,7 +644,7 @@ function App() {
             ))}
           </div>
           <Card className="mt-4">
-            <h3 className="text-xl font-semibold text-white">Что должно быть подписано для безопасного DSF deposit / withdraw</h3>
+            <h3 className="text-xl font-semibold text-white">Что должно входить в подпись для безопасного депозита и вывода</h3>
             <div className="mt-4 flex flex-wrap gap-2">
               {signatureFields.map((field) => (
                 <Badge key={field}>{field}</Badge>
@@ -623,7 +657,7 @@ function App() {
           id="matrix"
           kicker="Матрица решений"
           title="Интерактивная матрица выбора"
-          subtitle="Use case -> best architecture -> complexity -> UX quality -> DSF fit."
+          subtitle="Матрица помогает быстро понять, какой вариант лучше подходит под конкретную задачу."
         >
           <div className="overflow-hidden rounded-[28px] border border-white/10">
             <div className="overflow-x-auto">
@@ -652,8 +686,8 @@ function App() {
         <Section
           id="simulator"
           kicker="Интерактивный симулятор"
-          title="Gasless simulator для DSF"
-          subtitle="Выберите действие, актив, архитектуру, режим sponsorship и тип пользователя. Симулятор покажет, что подписывает пользователь и какие компоненты реально нужны."
+          title="Симулятор упрощенных сценариев для DSF"
+          subtitle="Выберите действие, актив, архитектуру, способ оплаты комиссии и тип пользователя. Симулятор покажет, что именно должен сделать человек и что потребуется от системы."
         >
           <div className="grid gap-4 xl:grid-cols-[0.42fr_0.58fr]">
             <Card>
@@ -678,7 +712,7 @@ function App() {
                 <MetricRow label="Сложность внедрения" value={simulatorResult.difficulty} />
               </div>
               <div className="mt-6">
-                <StatBar label="UX score" value={simulatorResult.score} />
+                <StatBar label="Оценка удобства" value={simulatorResult.score} />
               </div>
             </Card>
           </div>
@@ -686,9 +720,9 @@ function App() {
 
         <Section
           id="faq"
-          kicker="FAQ"
-          title="FAQ для сценария DSF"
-          subtitle="Ответы специально сформулированы под LP vault protocol, а не под абстрактную Ethereum-теорию."
+          kicker="Вопросы и ответы"
+          title="Частые вопросы по сценарию DSF"
+          subtitle="Ответы здесь привязаны именно к протоколу с LP-токенами, а не к абстрактной теории про Ethereum."
         >
           <div className="grid gap-3">
             {faqItems.map(([question, answer], index) => {
@@ -795,19 +829,25 @@ function scoreForLabel(label) {
 
 function translateUiValue(value) {
   const map = {
-    deposit: "deposit",
-    withdraw: "withdraw",
-    standard: "standard",
-    "permit + relayer": "permit + relayer",
+    deposit: "депозит",
+    withdraw: "вывод",
+    standard: "обычный режим",
+    "permit + relayer": "разрешение на списание + сервис-отправитель",
     "protocol pays": "платит протокол",
-    "relayer pays": "платит relayer",
-    "paymaster pays": "платит paymaster",
-    "first tx only": "только первая tx",
+    "relayer pays": "платит сервис-отправитель",
+    "paymaster pays": "платит спонсор комиссий",
+    "first tx only": "только первая операция",
     "new user": "новый пользователь",
-    "existing LP holder": "текущий LP-холдер",
+    "existing LP holder": "текущий держатель LP-токенов",
     "mobile user": "мобильный пользователь",
     "power user": "опытный пользователь",
-    "custom intent": "custom intent"
+    "custom intent": "собственное подписанное действие",
+    "ERC-2771": "ERC-2771",
+    "ERC-4337": "ERC-4337",
+    USDT: "USDT",
+    USDC: "USDC",
+    DAI: "DAI",
+    LP: "LP"
   };
   return map[value] || value;
 }

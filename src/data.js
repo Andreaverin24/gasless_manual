@@ -2,7 +2,7 @@ export const navItems = [
   ["Проблема", "problem"],
   ["Смысл", "meaning"],
   ["Сценарии", "scenarios"],
-  ["UX flow", "ux-flow"],
+  ["Путь пользователя", "ux-flow"],
   ["Архитектуры", "architectures"],
   ["Депозит", "deposit-tech"],
   ["Вывод", "withdraw-tech"],
@@ -12,48 +12,48 @@ export const navItems = [
   ["Риски", "risks"],
   ["Матрица", "matrix"],
   ["Симулятор", "simulator"],
-  ["FAQ", "faq"]
+  ["Вопросы", "faq"]
 ];
 
 export const heroStats = [
   { label: "Окна кошелька", value: "2 -> 1", detail: "депозит и вывод можно свести к одному шагу подписи" },
-  { label: "Кто платит gas", value: "Спонсор", detail: "treasury протокола, relayer, партнерская кампания или paymaster" },
-  { label: "Главная цель", value: "Mint / burn LP", detail: "без требования держать ETH на краю пользовательского пути" }
+  { label: "Кто платит комиссию", value: "Спонсор", detail: "казна протокола, сервис-отправитель, партнерская кампания или спонсор комиссий" },
+  { label: "Главная цель", value: "Выпуск и сжигание LP", detail: "без требования держать ETH в самый неудобный момент" }
 ];
 
 export const problemComparison = {
   deposit: {
     standard: [
-      "Connect wallet",
-      "Ensure ETH balance",
-      "Approve stablecoin",
-      "Confirm deposit transaction",
-      "Wait for mining",
-      "Receive DSF LP"
+      "Подключить кошелек",
+      "Убедиться, что есть ETH на комиссию",
+      "Разрешить списание стейблкоина",
+      "Подтвердить транзакцию депозита",
+      "Подождать подтверждения сети",
+      "Получить токены DSF LP"
     ],
     gasless: [
-      "Connect wallet",
-      "Sign permit or deposit intent",
-      "Relayer submits sponsored tx",
-      "Vault receives stablecoins",
-      "Protocol mints DSF LP"
+      "Подключить кошелек",
+      "Подписать разрешение или намерение на депозит",
+      "Сервис-отправитель отправляет спонсируемую транзакцию",
+      "Хранилище получает стейблкоины",
+      "Протокол выпускает токены DSF LP"
     ]
   },
   withdraw: {
     standard: [
-      "Open withdraw panel",
-      "Ensure ETH balance",
-      "Confirm withdrawal transaction",
-      "Burn or redeem LP",
-      "Wait for mining",
-      "Receive stablecoins"
+      "Открыть вывод",
+      "Убедиться, что есть ETH на комиссию",
+      "Подтвердить транзакцию вывода",
+      "Сжечь или погасить LP-токены",
+      "Подождать подтверждения сети",
+      "Получить стейблкоины"
     ],
     gasless: [
-      "Open withdraw panel",
-      "Sign withdraw intent",
-      "Relayer submits sponsored tx",
-      "Executor validates signature",
-      "DSF burns LP and returns stablecoins"
+      "Открыть вывод",
+      "Подписать намерение на вывод",
+      "Сервис-отправитель отправляет спонсируемую транзакцию",
+      "Исполняющий контракт проверяет подпись",
+      "DSF сжигает LP-токены и возвращает стейблкоины"
     ]
   }
 };
@@ -316,83 +316,83 @@ export const flowModes = {
 
 export const depositDeepDive = [
   {
-    title: "Variant 1: permit + deposit",
+    title: "Вариант 1: подпись разрешения + депозит",
     bullets: [
-      "User signs permit for stablecoin or Permit2 approval.",
-      "User signs deposit intent or a combined request.",
-      "Relayer calls DSF executor / router.",
-      "Router uses permit data, transfers asset, deposits into vault, and mints LP.",
-      "Sponsor pays gas."
+      "Пользователь подписывает разрешение на использование стейблкоина через permit или Permit2.",
+      "Пользователь подписывает намерение на депозит или объединенный запрос.",
+      "Сервис-отправитель вызывает отдельный контракт-исполнитель DSF.",
+      "Контракт использует данные подписи, переводит актив, вносит его в хранилище и выпускает LP-токены.",
+      "Комиссию за выполнение оплачивает спонсор."
     ]
   },
   {
-    title: "Variant 2: meta-transaction deposit",
+    title: "Вариант 2: мета-транзакция на депозит",
     bullets: [
-      "User signs typed deposit request with token, amount, receiver, minLpOut, nonce, deadline, chainId.",
-      "Relayer submits signed payload.",
-      "Forwarder or executor verifies signature and replay protection.",
-      "Deposit is executed and LP is minted to receiver."
+      "Пользователь подписывает структурированный запрос на депозит: токен, сумма, получатель, минимально допустимое число LP-токенов, nonce, срок действия и сеть.",
+      "Сервис-отправитель отправляет подписанный запрос в сеть.",
+      "Промежуточный или исполняющий контракт проверяет подпись и защиту от повторного использования.",
+      "Депозит исполняется, а LP-токены выпускаются на адрес получателя."
     ]
   }
 ];
 
 export const withdrawDeepDive = [
   {
-    title: "Withdraw intent shape",
+    title: "Что должно входить в подпись на вывод",
     bullets: [
-      "shares or LP amount",
-      "tokenOut",
-      "minAmountOut",
-      "receiver",
-      "nonce",
-      "deadline",
-      "chainId"
+      "количество долей или LP-токенов",
+      "какой актив должен прийти на выходе",
+      "минимально допустимая сумма к получению",
+      "адрес получателя",
+      "одноразовый номер запроса",
+      "срок действия подписи",
+      "идентификатор сети"
     ]
   },
   {
-    title: "Why withdraw often matters more",
+    title: "Почему вывод часто даже важнее депозита",
     bullets: [
-      "Users may have zero ETH left when exiting a position.",
-      "Gasless withdraw reduces support friction during stressed market conditions.",
-      "It is a strong trust signal if the protocol lets users exit without extra ETH requirements."
+      "У пользователя может уже не остаться ETH, когда он хочет выйти из позиции.",
+      "Вывод без комиссии со стороны пользователя снижает число проблем в стрессовые моменты рынка.",
+      "Если протокол позволяет выйти без необходимости срочно пополнять кошелек ETH, это сильно повышает доверие."
     ]
   }
 ];
 
 export const signatureFields = [
-  "user address",
-  "asset or shares",
-  "amount",
-  "minOut / minLpOut",
-  "receiver",
-  "nonce",
-  "deadline",
-  "chainId",
-  "contract address / domain",
-  "action type"
+  "адрес пользователя",
+  "актив или число долей",
+  "сумма",
+  "минимально допустимый результат",
+  "получатель",
+  "одноразовый номер запроса",
+  "срок действия",
+  "идентификатор сети",
+  "адрес контракта и домен подписи",
+  "тип действия"
 ];
 
 export const contractDiagram = [
-  "User signs",
-  "Frontend packages intent",
-  "Relayer backend checks sponsor policy",
-  "DSF Executor / Forwarder / Router",
-  "DSF Vault / LP Contract",
-  "Stablecoins / strategy settlement"
+  "Пользователь подписывает действие",
+  "Интерфейс собирает и отправляет запрос",
+  "Сервис-отправитель проверяет правила спонсирования",
+  "Исполняющий контракт DSF",
+  "Хранилище DSF и контракт LP-токенов",
+  "Расчеты в стейблкоинах и стратегиях"
 ];
 
 export const aaDiagram = [
-  "User Smart Account",
-  "UserOperation",
-  "Bundler",
-  "EntryPoint",
-  "Paymaster sponsorship",
-  "DSF deposit / withdraw call"
+  "Умный кошелек пользователя",
+  "Пакет команды пользователя",
+  "Сервис упаковки операций",
+  "Входной контракт",
+  "Спонсор комиссий",
+  "Вызов депозита или вывода DSF"
 ];
 
 export const codeExamples = [
   {
-    title: "DepositIntent typed data",
+    title: "Структура подписи для депозита",
     code: `const domain = {
   name: "DSF Gasless Executor",
   version: "1",
@@ -413,7 +413,7 @@ const types = {
 };`
   },
   {
-    title: "WithdrawIntent typed data",
+    title: "Структура подписи для вывода",
     code: `const types = {
   WithdrawIntent: [
     { name: "user", type: "address" },
@@ -427,7 +427,7 @@ const types = {
 };`
   },
   {
-    title: "Signature verification + nonce",
+    title: "Проверка подписи и одноразового номера",
     code: `function _useIntentNonce(address user, uint256 nonce) internal {
     require(nonce == nonces[user]++, "BAD_NONCE");
 }
@@ -452,11 +452,11 @@ function _verifyDeposit(
 }`
   },
   {
-    title: "Deadline check",
+    title: "Проверка срока действия",
     code: `require(block.timestamp <= intent.deadline, "INTENT_EXPIRED");`
   },
   {
-    title: "Trusted forwarder recipient",
+    title: "Получатель с доверенным пересыльщиком",
     code: `function _msgSender() internal view returns (address signer) {
     if (isTrustedForwarder(msg.sender)) {
         assembly {
@@ -468,7 +468,7 @@ function _verifyDeposit(
 }`
   },
   {
-    title: "Conceptual permit + deposit",
+    title: "Условный пример: разрешение плюс депозит",
     code: `function depositWithPermit(
     DepositIntent calldata intent,
     PermitData calldata permit,
@@ -485,7 +485,7 @@ function _verifyDeposit(
 }`
   },
   {
-    title: "Conceptual withdrawBySig",
+    title: "Условный пример: вывод по подписи",
     code: `function withdrawBySig(
     WithdrawIntent calldata intent,
     bytes calldata signature
@@ -500,7 +500,7 @@ function _verifyDeposit(
 }`
   },
   {
-    title: "ERC-4337 paymaster idea",
+    title: "Идея спонсора комиссий в ERC-4337",
     code: `function validatePaymasterUserOp(
     PackedUserOperation calldata userOp,
     bytes32 userOpHash,
@@ -515,75 +515,75 @@ function _verifyDeposit(
 
 export const dsfRecommendations = [
   {
-    phase: "Phase 1",
-    title: "Fastest practical path",
+    phase: "Этап 1",
+    title: "Самый быстрый практический путь",
     bullets: [
-      "Permit2 or permit-like approve-less deposit for stablecoins.",
-      "Sponsored first deposit for onboarding and campaigns.",
-      "Relayed withdraw for selected users or controlled cohorts."
+      "Убрать отдельное подтверждение списания для депозита стейблкоинов через Permit2 или похожую схему.",
+      "Спонсировать первый депозит для онбординга и рекламных кампаний.",
+      "Сделать вывод через подпись и отправку со стороны сервиса для выбранных пользователей."
     ]
   },
   {
-    phase: "Phase 2",
-    title: "General-purpose gasless DSF layer",
+    phase: "Этап 2",
+    title: "Универсальный слой работы без комиссии со стороны пользователя",
     bullets: [
-      "Introduce DSF executor for signed deposit and withdraw intents.",
-      "Add nonce management, signature cancellation, sponsor budget control.",
-      "Expand sponsorship from campaigns to protocol-level policy."
+      "Добавить отдельный контракт-исполнитель для депозитов и выводов по подписи.",
+      "Добавить управление одноразовыми номерами, отмену подписей и контроль бюджета спонсирования.",
+      "Расширить спонсирование от точечных акций до правил всего протокола."
     ]
   },
   {
-    phase: "Phase 3",
-    title: "Advanced smart wallet UX",
+    phase: "Этап 3",
+    title: "Продвинутый путь с умными кошельками",
     bullets: [
-      "Add ERC-4337 smart account onboarding.",
-      "Use paymaster for broader sponsored usage.",
-      "Move toward true one-click portfolio UX."
+      "Добавить онбординг через умные кошельки ERC-4337.",
+      "Использовать отдельный механизм спонсирования комиссий для более широких сценариев.",
+      "Перейти к по-настоящему простому управлению портфелем в один клик."
     ]
   }
 ];
 
 export const riskCards = [
-  "Replay attacks",
-  "Nonce collisions",
-  "Deadline misuse",
-  "Stale signed requests",
-  "Signature phishing",
-  "Relayer censorship",
-  "Sponsor budget draining",
-  "Paymaster abuse",
-  "Forwarder trust assumptions",
-  "Incorrect _msgSender handling",
-  "LP mint/burn accounting bugs",
-  "Missing minOut / minLpOut",
-  "Over-broad signature scope",
-  "Missing cancel / invalidate flow"
+  "Повторное использование старой подписи",
+  "Конфликт одноразовых номеров запросов",
+  "Неверная работа со сроком действия",
+  "Устаревшие подписанные запросы",
+  "Обман пользователя через подмену подписи",
+  "Отказ сервиса-отправителя проводить операцию",
+  "Быстрое выгорание бюджета на комиссии",
+  "Злоупотребление механизмом спонсирования",
+  "Избыточное доверие к промежуточному контракту",
+  "Неверное определение настоящего отправителя",
+  "Ошибки в учете выпуска и сжигания LP-токенов",
+  "Отсутствие защиты по минимальному результату",
+  "Слишком широкая область действия подписи",
+  "Отсутствие механизма отмены или блокировки подписи"
 ];
 
 export const decisionRows = [
-  ["Онбординг первого депозита", "Permit2 + relayer", "Низкая", "Средняя", "Высокое", "Средняя", "Отлично"],
-  ["Повторяющиеся депозиты", "Custom intent / ERC-2771", "Средняя", "Средняя", "Высокое", "Высокая", "Сильный fit"],
-  ["Выводы", "Custom signed withdraw", "Средняя", "Средняя", "Очень высокое", "Высокая", "Отлично"],
-  ["Мобильные пользователи", "ERC-4337 + paymaster", "Высокая", "Высокая", "Очень высокое", "Высокая", "Долгосрочно"],
-  ["Партнерские кампании", "Relayer + sponsor rules", "Низкая", "Средняя", "Высокое", "Средняя", "Отлично"],
-  ["Пользователи с большим чеком", "Custom intent + budget checks", "Средняя", "Средняя", "Высокое", "Высокая", "Сильный fit"],
-  ["Treasury-sponsored onboarding", "Permit2 + sponsored deposit", "Низкая", "Низкая", "Высокое", "Средняя", "Отлично"],
-  ["One-click UX", "ERC-4337", "Высокая", "Высокая", "Очень высокое", "Высокая", "Позже"],
-  ["Полный smart wallet onboarding", "ERC-4337 + paymaster", "Высокая", "Высокая", "Очень высокое", "Высокая", "Стратегически"]
+  ["Первый депозит нового пользователя", "Permit2 + сервис-отправитель", "Низкая", "Средняя", "Высокое", "Средняя", "Отлично"],
+  ["Регулярные депозиты", "Собственная подпись / ERC-2771", "Средняя", "Средняя", "Высокое", "Высокая", "Сильное соответствие"],
+  ["Вывод средств", "Вывод по собственной подписи", "Средняя", "Средняя", "Очень высокое", "Высокая", "Отлично"],
+  ["Мобильные пользователи", "ERC-4337 + спонсор комиссий", "Высокая", "Высокая", "Очень высокое", "Высокая", "Долгосрочно"],
+  ["Партнерские кампании", "Сервис-отправитель + правила спонсирования", "Низкая", "Средняя", "Высокое", "Средняя", "Отлично"],
+  ["Пользователи с большим объемом", "Собственная подпись + контроль бюджета", "Средняя", "Средняя", "Высокое", "Высокая", "Сильное соответствие"],
+  ["Онбординг за счет казны протокола", "Permit2 + спонсируемый депозит", "Низкая", "Низкая", "Высокое", "Средняя", "Отлично"],
+  ["Управление в один клик", "ERC-4337", "Высокая", "Высокая", "Очень высокое", "Высокая", "Поздний этап"],
+  ["Полный переход на умные кошельки", "ERC-4337 + спонсор комиссий", "Высокая", "Высокая", "Очень высокое", "Высокая", "Стратегически важно"]
 ];
 
 export const faqItems = [
-  ["Можно ли сделать gasless deposit для LP-протокола?", "Да. Наиболее реалистично для DSF это permit or Permit2 + relayer + executor layer, который проводит deposit и mint LP за пользователя."],
-  ["Можно ли сделать gasless withdraw без ETH у пользователя?", "Да. Пользователь подписывает withdraw intent, relayer отправляет tx, executor или vault проверяет подпись и делает redeem / burn LP."],
-  ["Кто реально платит gas?", "Relayer wallet, protocol treasury, partner campaign sponsor, or paymaster deposit. Gasless only changes who pays, not whether gas exists."],
-  ["Нужно ли менять core contracts?", "Не всегда. Часть MVP можно сделать через внешний executor / router layer. Но для более чистой архитектуры иногда нужны изменения в vault, LP token hooks, or forwarder support."],
-  ["Permit уже решает проблему?", "Только частично. Permit removes separate approve friction, but you still need a relayed execution path if the user should avoid paying gas entirely."],
-  ["Чем approve-less отличается от fully gasless?", "Approve-less removes an extra approval transaction. Fully gasless additionally means the user is not the gas payer for the actual on-chain action."],
-  ["Что лучше для DSF: ERC-2771 или кастомные подписи?", "If DSF needs exact control over deposit and withdraw semantics, custom DSF intents are usually more precise. ERC-2771 is cleaner when contracts can be adapted to trust a standard forwarder."],
-  ["Нужен ли ERC-4337, если нужен только gasless deposit/withdraw?", "Usually not for MVP. It is stronger as a long-term wallet and sponsorship strategy than as the first narrow implementation step."],
-  ["Что лучше внедрять первым?", "Permit2-backed deposits plus sponsored first deposit and a DSF-specific relayed withdraw path."],
-  ["Можно ли ограничить gasless только для first deposit?", "Да. Это один из самых реалистичных growth-first patterns because sponsor policy can remain off-chain while contracts stay mostly unchanged."],
-  ["Как защитить withdraw by signature от replay?", "Include nonce, deadline, chain/domain separation, exact action type, and a cancellation or nonce invalidation strategy."]
+  ["Можно ли сделать депозит без комиссии со стороны пользователя для LP-протокола?", "Да. Для DSF самый реалистичный путь на старте — подпись разрешения на списание средств, отдельный сервис-отправитель и внешний исполняющий контракт, который вносит активы и выпускает LP-токены."],
+  ["Можно ли сделать вывод без ETH у пользователя?", "Да. Пользователь подписывает разрешение на вывод, сервис-отправитель посылает транзакцию, а контракт проверяет подпись и проводит погашение LP-токенов."],
+  ["Кто на самом деле платит комиссию сети?", "Комиссию платит не сеть и не магия, а конкретная сторона: кошелек сервиса-отправителя, казна протокола, партнерская программа или механизм спонсирования комиссий."],
+  ["Нужно ли менять основные контракты протокола?", "Не всегда. Первый вариант можно собрать через внешний исполняющий слой. Но для более чистой и надежной архитектуры иногда полезно доработать хранилище, токены LP или поддержку доверенного посредника."],
+  ["Решает ли permit всю проблему?", "Нет. Permit убирает отдельный шаг подтверждения списания, но сам по себе не делает действие полностью бесплатным для пользователя. Для этого нужен еще и путь отправки транзакции за него."],
+  ["Чем упрощенный депозит отличается от полностью gasless-подхода?", "Упрощенный депозит убирает лишний шаг с подтверждением списания. Полностью gasless-подход идет дальше: пользователь еще и не оплачивает комиссию сети при выполнении операции."],
+  ["Что лучше для DSF: ERC-2771 или собственные подписи?", "Если DSF нужен точный контроль именно над логикой депозита и вывода, собственные подписи обычно точнее. ERC-2771 удобен, когда контракты можно безопасно адаптировать под доверенного посредника."],
+  ["Нужен ли ERC-4337, если требуется только депозит и вывод без комиссии со стороны пользователя?", "Обычно нет. Для первого внедрения это слишком тяжелый путь. Он сильнее подходит как долгосрочная стратегия развития кошельков и массового входа пользователей."],
+  ["Что лучше внедрять первым?", "Убрать отдельное подтверждение списания при депозите, спонсировать первый депозит и сделать вывод по подписи через отдельный исполняющий слой."],
+  ["Можно ли ограничить бесплатный режим только первым депозитом?", "Да. Это один из самых реалистичных способов запуска: правила спонсирования можно держать вне блокчейна, а изменения в контрактах оставить минимальными."],
+  ["Как защитить вывод по подписи от повторного использования?", "Нужно включать в подпись одноразовый номер, срок действия, привязку к сети и контракту, точный тип действия и механизм отмены или блокировки старых подписей."]
 ];
 
 export const simulatorConfig = {
